@@ -38,12 +38,12 @@ module WebexApi
       http.use_ssl = true
       response = http.post('/WBXService/XMLService', body)
       xml_data = Nokogiri::XML(response.body).remove_namespaces!
-      if xml_data.at_xpath('/message/header/response/result').try(:text) == 'SUCCESS'
+      if xml_data.at_xpath('/message/header/response/result') && xml_data.at_xpath('/message/header/response/result').text == 'SUCCESS'
         @success = true
         @xml_response = xml_data.at_xpath('/message/body/bodyContent')
       else
-        @error = xml_data.at_xpath('/message/header/response/reason').try(:text)
-        raise WebexApi::WebexError.new(xml_data.at_xpath('/message/header/response/reason').try(:text))
+        @error = xml_data.at_xpath('/message/header/response/reason').text rescue "error"
+        raise WebexApi::WebexError.new(@error)
       end
     end
 

@@ -1,3 +1,8 @@
+require 'webex_api/webex_error'
+require 'webex_api/request'
+require 'webex_api/meeting_request'
+require 'webex_api/meeting'
+
 module WebexApi
   class Client 
     attr_accessor :webex_id,:webex_password,:site_id,:site_name,:partner_id,:webex_email

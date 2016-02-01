@@ -10,9 +10,13 @@ module WebexApi
     end
 
     def self.create_meeting(client,name,options={})
+      meeting_key = nil
       meeting_request = WebexApi::MeetingRequest.new(client)
       meeting_request.create_meeting(name,options)
-      meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').try(:text)
+      if meeting_request.xml_response.at_xpath('//meetingkey')
+        meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
+      end
+      meeting_key  
     end
 
     def get_meeting
@@ -31,13 +35,21 @@ module WebexApi
     def get_host_url(email=nil)
       meeting_request = WebexApi::MeetingRequest.new(@client)
       meeting_request.get_host_meeting_url(@meeting_key)
-      meeting_request.xml_response.at_xpath('hostMeetingURL').try(:text)
+      if meeting_request.xml_response.at_xpath('hostMeetingURL')
+        meeting_request.xml_response.at_xpath('hostMeetingURL').text
+      else
+        nil
+      end
     end
 
     def get_join_url(email=nil)
       meeting_request = WebexApi::MeetingRequest.new(@client)
       meeting_request.get_join_meeting_url(@meeting_key)
-      meeting_request.xml_response.at_xpath('joinMeetingURL').try(:text)
+      if meeting_request.xml_response.at_xpath('joinMeetingURL')
+        meeting_request.xml_response.at_xpath('joinMeetingURL').text
+      else
+        nil
+      end
     end
 
     def add_attendee(user_email,user_info={})
@@ -59,7 +71,18 @@ module WebexApi
     end
     def method_missing(meth, *args, &block)
       if MEETING_ATTRIBUTES.include?(meth)
-        @meeting_attr[meth] ||= @xml.at_xpath("//*[contains(translate(name(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '#{meth.to_s.camelcase(:lower).downcase}')]").try(:text)
+        if @meeting_attr[meth]
+          @meeting_attr[meth]
+        else
+          if @xml.at_xpath("//*[contains(translate(name(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '#{meth.to_s.camelcase(:lower).downcase}')]")
+            @meeting_attr[meth]  = @xml.at_xpath("//*[contains(translate(name(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '#{meth.to_s.camelcase(:lower).downcase}')]").text
+          else
+            @meeting_attr[meth]  = nil
+          end
+          
+        end  
+
+        @meeting_attr[meth] ||= @xml.at_xpath("//*[contains(translate(name(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '#{meth.to_s.camelcase(:lower).downcase}')]")
       end
     end
 
