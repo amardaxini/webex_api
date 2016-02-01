@@ -24,7 +24,7 @@ Or install it yourself as:
 
     client = WebexApi::Client.new("webex_username","webex_password","site_id","site_name","partner_id","webex_email")
 
-#### Create Meeting
+##### Create Meeting
 
     options = {
         duration: 10,
@@ -35,19 +35,19 @@ Or install it yourself as:
     }
     meeting_key = client.create_meeting(meeting_name,options)
 
-#### Meeting Info
+##### Meeting Info
     client.get_meeting(meeting_key)
 
-#### Meeting Host Url
+##### Meeting Host Url
     client.get_meeting_host_url(meeting_key)
 
-#### Meeting Join Url
+##### Meeting Join Url
     client.get_meeting_join_url(meeting_key)    
 
-#### Delete meeting 
+##### Delete meeting 
     client.delete_meeting(meeting_key)
 
-#### Add Attendee to meeting
+##### Add Attendee to meeting
     options = {
       :name=>"",
       :address_type=>"PERSONAL",
@@ -56,10 +56,10 @@ Or install it yourself as:
 
     client.add_attendee_to_meeting(meeting_key,"email,options)    
 
-#### Remove Attendee from meeting
+##### Remove Attendee from meeting
     client.delete_attendee_from_meeting(meeting_key,"amardaxini@gmail.com") 
 
-#### List Attendee for meeting
+##### List Attendee for meeting
     client.list_attendee_for_meeting(meeting_key)       
 
 ## TODO
