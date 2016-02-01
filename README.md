@@ -29,7 +29,7 @@ Or install it yourself as:
     options = {
         duration: 10,
         emails: [] ,
-        scheduled_date: Time.now + 5.minutes,
+        scheduled_date: Date with time
         meeting_password: "admin123"
          time_zone: Time.zone
     }
