@@ -27,11 +27,11 @@ Or install it yourself as:
 ##### Create Meeting
 
     options = {
-        duration: 10,
-        emails: [] ,
-        scheduled_date: Date with time
-        meeting_password: "admin123"
-         time_zone: Time.zone
+        :duration=> 10,
+        :emails=> [] ,
+        :scheduled_date=>Date with time
+        :meeting_password=> "admin123"
+        
     }
     meeting_key = client.create_meeting(meeting_name,options)
 
@@ -54,10 +54,10 @@ Or install it yourself as:
       :role=>"ATTENDEE or PRESENTER or HOST"
     }
 
-    client.add_attendee_to_meeting(meeting_key,"email,options)    
+    client.add_attendee_to_meeting(meeting_key,"email",options)    
 
 ##### Remove Attendee from meeting
-    client.delete_attendee_from_meeting(meeting_key,"amardaxini@gmail.com") 
+    client.delete_attendee_from_meeting(meeting_key,"email") 
 
 ##### List Attendee for meeting
     client.list_attendee_for_meeting(meeting_key)       
