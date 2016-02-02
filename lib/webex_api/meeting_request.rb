@@ -103,6 +103,7 @@ module WebexApi
           }
           xml.role options[:role] || "ATTENDEE"
           xml.sessionKey meeting_key
+          xml.emailInvitations options[:email_invitation] || "FALSE"
         }
       end
       perform_request(body)
