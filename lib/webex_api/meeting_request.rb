@@ -18,9 +18,11 @@ module WebexApi
           end
           xml.schedule{
             if options[:scheduled_date]
+              options[:scheduled_date]
               xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
               # xml.timeZoneID 4
             else
+              options[:scheduled_date].to_s + "1"
               xml.startDate
             end
             xml.duration(options[:duration].to_i)
