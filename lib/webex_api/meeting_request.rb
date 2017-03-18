@@ -1,9 +1,9 @@
 module WebexApi
   class MeetingRequest < WebexApi::Request
-    
+
     def initialize(client)
       super(client)
-      
+
     end
     def create_meeting(conf_name,options={})
       body = webex_xml_request(@client.webex_email) do |xml|
@@ -18,9 +18,11 @@ module WebexApi
           end
           xml.schedule{
             if options[:scheduled_date]
+              puts options[:scheduled_date].to_s
               xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
               # xml.timeZoneID 4
             else
+              options[:scheduled_date].to_s + "1"
               xml.startDate
             end
             xml.duration(options[:duration].to_i)
@@ -41,6 +43,7 @@ module WebexApi
           end
         }
       end
+      puts body
       perform_request(body)
 
     end
@@ -83,7 +86,7 @@ module WebexApi
         }
       end
       perform_request(body)
-      
+
     end
 
     def add_attendee(meeting_key,email,options={})
@@ -92,12 +95,12 @@ module WebexApi
           xml.person{
             if options[:name]
               xml.name options[:name]
-            end  
-            
+            end
+
               xml.address {
                 xml.addressType options[:address_type] || "PERSONAL"
               }
-            
+
             xml.email email
             xml.type options[:type] || "VISITOR"
           }
@@ -116,7 +119,7 @@ module WebexApi
             xml.email email
             xml.sessionKey meeting_key
           }
-        }  
+        }
       end
       perform_request(body)
     end
@@ -126,11 +129,11 @@ module WebexApi
       body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.attendee.LstMeetingAttendee'){
           xml.meetingKey meeting_key
-          
-        }  
+
+        }
       end
       perform_request(body)
     end
-   
+
   end
 end
