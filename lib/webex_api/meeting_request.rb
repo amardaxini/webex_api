@@ -11,12 +11,10 @@ module WebexApi
           xml.metaData{
             xml.confName conf_name
           }
-          if options[:meeting_password] != nil && options[:meeting_password].strip != ''
-            xml.accessControl{
-              xml.meetingPassword options[:meeting_password]
-              xml.isPublic true
-            }
-          end
+          xml.accessControl{
+            # xml.meetingPassword options[:meeting_password]
+            xml.isPublic true
+          }
           xml.schedule{
             if options[:scheduled_date]
               # puts options[:scheduled_date].to_s
