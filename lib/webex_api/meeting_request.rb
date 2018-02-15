@@ -15,6 +15,7 @@ module WebexApi
           }
           xml.metaData{
             xml.confName conf_name
+            xml.meetingType 1
           }
           if options[:meeting_password] != nil && options[:meeting_password].strip != ''
             xml.accessControl{
