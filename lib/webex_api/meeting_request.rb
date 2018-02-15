@@ -48,8 +48,8 @@ module WebexApi
           end
         }
       end
-      # puts body
-      perform_request(body)
+      puts body
+      # perform_request(body)
 
     end
 
