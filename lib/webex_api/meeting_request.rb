@@ -50,7 +50,7 @@ module WebexApi
         }
       end
       puts body
-      # perform_request(body)
+      perform_request(body)
 
     end
 
