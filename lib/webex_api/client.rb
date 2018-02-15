@@ -2,6 +2,7 @@ require 'webex_api/webex_error'
 require 'webex_api/request'
 require 'webex_api/meeting_request'
 require 'webex_api/meeting'
+require 'webex_api/get_login_ticket'
 
 module WebexApi
   class Client 
