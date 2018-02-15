@@ -10,7 +10,6 @@ module WebexApi
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
           xml.metaData{
             xml.confName conf_name
-            xml.meetingType 2
           }
           if options[:meeting_password] != nil && options[:meeting_password].strip != ''
             xml.accessControl{
