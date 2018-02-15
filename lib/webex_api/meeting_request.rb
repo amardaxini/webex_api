@@ -11,7 +11,7 @@ module WebexApi
           xml.enableOptions{
             xml.chat true
             xml.audioVideo true
-            xml.chat true
+            xml.poll true
           }
           xml.metaData{
             xml.confName conf_name
