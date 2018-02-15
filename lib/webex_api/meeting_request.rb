@@ -12,6 +12,7 @@ module WebexApi
             xml.chat true
             xml.audioVideo true
             xml.poll true
+            xml.voip false
           }
           xml.metaData{
             xml.confName conf_name
@@ -22,6 +23,7 @@ module WebexApi
             }
           end
           xml.schedule{
+            xml.joinTeleConfBeforeHost true
             if options[:scheduled_date]
               # puts options[:scheduled_date].to_s
               xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
@@ -31,6 +33,9 @@ module WebexApi
               xml.startDate
             end
             xml.duration(options[:duration].to_i)
+          }
+          xml.telephony{
+            xml.telephonySupport 'CALLIN'
           }
           if options[:emails]
             xml.participants{
