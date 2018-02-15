@@ -8,13 +8,20 @@ module WebexApi
     def create_meeting(conf_name,options={})
       body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
+          xml.enableOptions{
+            xml.chat true
+            xml.audioVideo true
+            xml.poll true
+          }
           xml.metaData{
             xml.confName conf_name
           }
-          xml.accessControl{
-            # xml.meetingPassword options[:meeting_password]
-            xml.isPublic true
-          }
+          if options[:meeting_password] != nil && options[:meeting_password].strip != ''
+            xml.accessControl{
+              xml.meetingPassword options[:meeting_password]
+              xml.
+            }
+          end
           xml.schedule{
             if options[:scheduled_date]
               # puts options[:scheduled_date].to_s
@@ -55,8 +62,8 @@ module WebexApi
       end
       begin
         perform_request(body)
-      rescue WebexApi::WebexError
-        nil
+      rescue Exception => e
+        p e
       end
     end
 
