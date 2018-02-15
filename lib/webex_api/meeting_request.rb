@@ -19,7 +19,6 @@ module WebexApi
           if options[:meeting_password] != nil && options[:meeting_password].strip != ''
             xml.accessControl{
               xml.meetingPassword options[:meeting_password]
-              xml.
             }
           end
           xml.schedule{
