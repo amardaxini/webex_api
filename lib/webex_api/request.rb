@@ -15,11 +15,13 @@ module WebexApi
           xml.header{
             xml.parent.namespace = xml.parent.namespace_definitions.first
             xml.securityContext {
-              xml.webExID @client.webex_id
-              xml.password @client.webex_password
-              xml.siteID @client.site_id
+              xml.webExID @client.webex_id if !!@client.webex_id
+              xml.password @client.webex_password if !!@client.webex_password
+              xml.siteID @client.site_id if !!@client.site_id
               xml.partnerID @client.partner_id if !!@client.partner_id
+              xml.siteName @client.site_name if !!@client.site_name
               xml.email email if !!email
+              xml.sessionTicket @client.session_ticket if !!@client.session_ticket
             }
           }
           xml.body{

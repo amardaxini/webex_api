@@ -23,7 +23,9 @@ module WebexApi
             }
           end
           xml.schedule{
-            xml.joinTeleConfBeforeHost true
+            if options[:join_teleconf_before_host]
+              xml.joinTeleconfBeforeHost !!options[:join_teleconf_before_host]
+            end
             if options[:scheduled_date]
               # puts options[:scheduled_date].to_s
               xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
