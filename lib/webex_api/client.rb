@@ -2,21 +2,44 @@ require 'webex_api/webex_error'
 require 'webex_api/request'
 require 'webex_api/meeting_request'
 require 'webex_api/meeting'
+require 'webex_api/get_login_ticket'
+require 'webex_api/authenticate_user_request'
 
 module WebexApi
   class Client 
-    attr_accessor :webex_id,:webex_password,:site_id,:site_name,:partner_id,:webex_email
-    def initialize(webex_id,webex_password,site_id,site_name,partner_id=nil,webex_email=nil)
+    attr_accessor :webex_id,
+                  :webex_password,
+                  :site_id,
+                  :site_name,
+                  :partner_id,
+                  :webex_email,
+                  :site_name,
+                  :access_token,
+                  :session_ticket
+
+    def initialize(webex_id, webex_email, site_name, site_id=nil, partner_id=nil)
       @webex_id = webex_id
-      @webex_password = webex_password
-      @site_id = site_id
       @site_name = site_name
-      @partner_id = partner_id
-      @webex_email = webex_email
-    
+    end
+
+    def with_access_token(access_token)
+      @access_token = access_token
+    end
+
+    def with_password(password)
+      @webex_password = password
+    end
+
+    def authenticate_user(access_token)
+      authenticate_user_request = WebexApi::AuthenticateUserRequest.new(self)
+      session_ticket = authenticate_user_request.authenticate_user(access_token)
     end
     
     def create_meeting(name,options={})
+      if @access_token
+        @session_ticket = authenticate_user @access_token
+      end
+
       meeting = WebexApi::Meeting.create_meeting(self,name,options)
     end
 

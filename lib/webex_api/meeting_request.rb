@@ -8,6 +8,12 @@ module WebexApi
     def create_meeting(conf_name,options={})
       body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
+          xml.enableOptions{
+            xml.chat true
+            xml.audioVideo true
+            xml.poll true
+            xml.voip false
+          }
           xml.metaData{
             xml.confName conf_name
           }
@@ -17,6 +23,9 @@ module WebexApi
             }
           end
           xml.schedule{
+            if options[:join_teleconf_before_host]
+              xml.joinTeleconfBeforeHost !!options[:join_teleconf_before_host]
+            end
             if options[:scheduled_date]
               # puts options[:scheduled_date].to_s
               xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
@@ -26,6 +35,9 @@ module WebexApi
               xml.startDate
             end
             xml.duration(options[:duration].to_i)
+          }
+          xml.telephony{
+            xml.telephonySupport 'CALLIN'
           }
           if options[:emails]
             xml.participants{
@@ -43,7 +55,7 @@ module WebexApi
           end
         }
       end
-      # puts body
+      puts body
       perform_request(body)
 
     end
@@ -56,8 +68,8 @@ module WebexApi
       end
       begin
         perform_request(body)
-      rescue WebexApi::WebexError
-        nil
+      rescue Exception => e
+        p e
       end
     end
 
