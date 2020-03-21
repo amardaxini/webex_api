@@ -16,7 +16,16 @@ module WebexApi
       if meeting_request.xml_response.at_xpath('//meetingkey')
         meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
       end
-      meeting_key  
+
+      if meeting_key
+        return {
+          key: meeting_key,
+          host_url: meeting_request.xml_response.at_xpath('//host')&.text,
+          attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text
+        }
+      else
+        return nil
+      end  
     end
 
     def get_meeting
