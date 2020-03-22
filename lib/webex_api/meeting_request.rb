@@ -121,6 +121,7 @@ module WebexApi
           xml.emailInvitations options[:email_invitation] || "FALSE"
         }
       end
+      puts body
       perform_request(body)
     end
 

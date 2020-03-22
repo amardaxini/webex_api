@@ -34,48 +34,57 @@ module WebexApi
       authenticate_user_request = WebexApi::AuthenticateUserRequest.new(self)
       session_ticket = authenticate_user_request.authenticate_user(access_token)
     end
-    
-    def create_meeting(name,options={})
+
+    def set_session_ticket
       if @access_token
         @session_ticket = authenticate_user @access_token
       end
-
+    end
+    
+    def create_meeting(name,options={})
+      set_session_ticket
       meeting = WebexApi::Meeting.create_meeting(self,name,options)
     end
 
     def get_meeting(meeting_key)
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.get_meeting
       meeting
     end
     
     def get_meeting_host_url(meeting_key,user_email=nil)
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.get_host_url(user_email)
-      
     end
 
     def get_meeting_join_url(meeting_key,user_email=nil)
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.get_join_url(user_email)
       
     end
 
     def delete_meeting(meeting_key)
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.delete_meeting
     end
     # option {:name=>"ss",:address_type=>"PERSONAL or GLOBAL",:role=>"ATTENDEE or PRESENTER or HOST"}
     def add_attendee_to_meeting(meeting_key,user_email,options={})
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.add_attendee(user_email,options)
     end
 
     def delete_attendee_from_meeting(meeting_key,user_email)
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.delete_attendee(user_email)
     end
     def list_attendee_for_meeting(meeting_key)
+      set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.list_attendees
     end
