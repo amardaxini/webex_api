@@ -20,8 +20,9 @@ module WebexApi
       if meeting_key
         return {
           key: meeting_key,
-          host_url: meeting_request.xml_response.at_xpath('//host')&.text,
-          attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text
+          password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
+          ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
+          ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text
         }
       else
         return nil

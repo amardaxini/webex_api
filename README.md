@@ -22,7 +22,8 @@ Or install it yourself as:
 
 ## Usage
 
-    client = WebexApi::Client.new("webex_username","webex_password","site_id","site_name","partner_id","webex_email")
+    client = WebexApi::Client.new("webex_user_id","webex_email","site_name","site_id","partner_id")
+    client.with_access_token("access_token")
 
 ##### Create Meeting
 

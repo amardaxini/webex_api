@@ -36,7 +36,7 @@ module WebexApi
     end
 
     def set_session_ticket
-      if @access_token
+      if @access_token && !@session_ticket
         @session_ticket = authenticate_user @access_token
       end
     end
