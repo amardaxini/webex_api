@@ -27,9 +27,8 @@ module WebexApi
               xml.joinTeleconfBeforeHost !!options[:join_teleconf_before_host]
             end
             if options[:scheduled_date]
-              # puts options[:scheduled_date].to_s
               xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
-              # xml.timeZoneID 4
+              xml.timeZoneID 21   # 'GMT+00:00, GMT (London)'
             else
               options[:scheduled_date].to_s + "1"
               xml.startDate
