@@ -12,7 +12,7 @@ module WebexApi
             xml.chat true
             xml.audioVideo true
             xml.poll true
-            xml.voip false
+            xml.voip true
           }
           xml.metaData{
             xml.confName conf_name
