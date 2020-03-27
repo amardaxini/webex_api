@@ -29,6 +29,25 @@ module WebexApi
       end  
     end
 
+    def self.set_meeting(client, name, meeting_key, options={})
+      meeting_request = WebexApi::MeetingRequest.new(client)
+      meeting_request.set_meeting(name, meeting_key, options)
+      if meeting_request.xml_response.at_xpath('//meetingkey')
+        meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
+      end
+
+      if meeting_key
+        return {
+          key: meeting_key,
+          password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
+          ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
+          ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text
+        }
+      else
+        return nil
+      end  
+    end
+
     def get_meeting
       meeting_info = WebexApi::MeetingRequest.new(@client)
       meeting_info.get_meeting(@meeting_key)

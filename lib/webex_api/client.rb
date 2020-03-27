@@ -41,9 +41,14 @@ module WebexApi
       end
     end
     
-    def create_meeting(name,options={})
+    def create_meeting(name, options={})
       set_session_ticket
-      meeting = WebexApi::Meeting.create_meeting(self,name,options)
+      meeting = WebexApi::Meeting.create_meeting(self, name, options)
+    end
+
+    def set_meeting(name, meeting_key, options={})
+      set_session_ticket
+      meeting = WebexApi::Meeting.set_meeting(self, name, meeting_key, options)
     end
 
     def get_meeting(meeting_key)

@@ -3,60 +3,84 @@ module WebexApi
 
     def initialize(client)
       super(client)
-
     end
+  
     def create_meeting(conf_name,options={})
+      body = get_createmeeting_body(conf_name, options)
+      perform_request(body)
+    end
+
+    def set_meeting(conf_name, meeting_key, options={})
+      body = get_setmeeting_body(conf_name, meeting_key, options)
+      perform_request(body)
+    end
+
+    def get_createmeeting_body(conf_name, options={})
       body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
-          xml.enableOptions{
-            xml.chat true
-            xml.audioVideo true
-            xml.poll true
-            xml.voip true
-          }
-          xml.metaData{
-            xml.confName conf_name
-          }
-          if options[:meeting_password] != nil && options[:meeting_password].strip != ''
-            xml.accessControl{
-              xml.meetingPassword options[:meeting_password]
-            }
-          end
-          xml.schedule{
-            if options[:join_teleconf_before_host]
-              xml.joinTeleconfBeforeHost !!options[:join_teleconf_before_host]
-            end
-            if options[:scheduled_date]
-              xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
-              xml.timeZoneID 21   # 'GMT+00:00, GMT (London)'
-            else
-              options[:scheduled_date].to_s + "1"
-              xml.startDate
-            end
-            xml.duration(options[:duration].to_i)
-          }
-          xml.telephony{
-            xml.telephonySupport 'CALLIN'
-          }
-          if options[:emails]
-            xml.participants{
-              xml.attendees{
-                options[:emails].each do |email|
-                  xml.attendee {
-                    xml.emailInvitations true
-                    xml.person {
-                      xml.email email
-                    }
-                  }
-                end
-              }
-            }
-          end
+          get_meeting_body(xml, conf_name, nil, options)
         }
       end
       puts body
-      perform_request(body)
+      body
+    end
 
+    def get_setmeeting_body(conf_name, meeting_key, options={})
+      body = webex_xml_request(@client.webex_email) do |xml|
+        xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.SetMeeting'){
+          get_meeting_body(xml, conf_name, meeting_key, options)
+        }
+      end
+      puts body
+      body
+    end
+
+    def get_meeting_body(xml, conf_name, meeting_key, options)
+      xml.enableOptions{
+        xml.chat true
+        xml.audioVideo true
+        xml.poll true
+        xml.voip true
+      }
+      xml.metaData{
+        xml.confName conf_name
+      }
+      if options[:meeting_password] != nil && options[:meeting_password].strip != ''
+        xml.accessControl{
+          xml.meetingPassword options[:meeting_password]
+        }
+      end
+      xml.schedule{
+        if options[:join_teleconf_before_host]
+          xml.joinTeleconfBeforeHost !!options[:join_teleconf_before_host]
+        end
+        if options[:scheduled_date]
+          xml.startDate options[:scheduled_date].utc.strftime("%m/%d/%Y %T") rescue nil
+          xml.timeZoneID 21   # 'GMT+00:00, GMT (London)'
+        else
+          options[:scheduled_date].to_s + "1"
+          xml.startDate
+        end
+        xml.duration(options[:duration].to_i)
+      }
+      xml.telephony{
+        xml.telephonySupport 'CALLIN'
+      }
+      xml.meetingkey meeting_key unless meeting_key.nil?
+      if options[:emails]
+        xml.participants{
+          xml.attendees{
+            options[:emails].each do |email|
+              xml.attendee {
+                xml.emailInvitations true
+                xml.person {
+                  xml.email email
+                }
+              }
+            end
+          }
+        }
+      end
     end
 
     def get_meeting(meeting_key)
