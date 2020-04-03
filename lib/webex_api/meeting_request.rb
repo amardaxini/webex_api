@@ -41,6 +41,9 @@ module WebexApi
         xml.audioVideo true
         xml.poll true
         xml.voip true
+        xml.HQvideo true if options[:hd_video]
+        xml.HDvideo true if options[:hd_video]
+        xml.autoDeleteAfterMeetingEnd false if options[:dont_auto_delete]
       }
       xml.metaData{
         xml.confName conf_name
