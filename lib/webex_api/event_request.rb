@@ -52,7 +52,7 @@ module WebexApi
             end
         end
 
-        def delete(session_key)
+        def delete_event(session_key)
             body = webex_xml_request(@client.webex_email) do |xml|
                 xml.bodyContent('xsi:type' => 'java:com.webex.service.binding.event.DelEvent'){
                   xml.sessionKey session_key
