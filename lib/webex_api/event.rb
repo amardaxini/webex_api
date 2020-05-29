@@ -2,10 +2,10 @@ module WebexApi
     class Event
         attr_reader :xml
 
-        def initialize(meeting_key,client)
-        @meeting_key= meeting_key
-        @email =  email
-        @client = client
+        def initialize(session_key,client)
+            @session_key= session_key
+            @email =  email
+            @client = client
         end
 
         def self.create_meeting(client,name,options={})
