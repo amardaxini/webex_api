@@ -8,7 +8,7 @@ module WebexApi
             @client = client
         end
 
-        def self.create_meeting(client,name,options={})
+        def self.create_event(client,name,options={})
             session_key = nil
             session_request = WebexApi::EventRequest.new(client)
             session_request.create_event(name,options)

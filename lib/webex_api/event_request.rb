@@ -23,7 +23,7 @@ module WebexApi
 
         def get_meeting_body(xml, session_name, meeting_key, options)
             xml.accessControl{
-              xml.listing         'PUBLIC'
+              xml.listing         'UNLISTED'
               xml.sessionPassword options[:session_password]
             }
             xml.schedule{
