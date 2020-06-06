@@ -28,12 +28,12 @@ module WebexApi
             }
             xml.schedule{
               xml.startDate         options[:start_date]
-              xml.duration          "12"
+              xml.duration          options[:duration]
             }
             xml.metaData{
                 xml.sessionName session_name
                 xml.sessionType "9"
-                xml.description "This is a test"
+                xml.description options[:description]
             }
             xml.telephony{
               xml.telephonySupport 'CALLIN'
