@@ -8,7 +8,7 @@ require 'webex_api/get_login_ticket'
 require 'webex_api/authenticate_user_request'
 
 module WebexApi
-  class Client 
+  class Client
     attr_accessor :webex_id,
                   :webex_password,
                   :site_id,
@@ -42,17 +42,17 @@ module WebexApi
         @session_ticket = authenticate_user @access_token
       end
     end
-    
+
     def create_meeting(name, options={})
       set_session_ticket
       meeting = WebexApi::Meeting.create_meeting(self, name, options)
     end
-    
+
     def create_event(name, options={})
       set_session_ticket
       meeting = WebexApi::Event.create_event(self, name, options)
     end
-    
+
     def set_meeting(name, meeting_key, options={})
       set_session_ticket
       meeting = WebexApi::Meeting.set_meeting(self, name, meeting_key, options)
@@ -64,7 +64,7 @@ module WebexApi
       meeting.get_meeting
       meeting
     end
-    
+
     def get_meeting_host_url(meeting_key,user_email=nil)
       set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
@@ -75,7 +75,7 @@ module WebexApi
       set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.get_join_url(user_email)
-      
+
     end
 
     def delete_meeting(meeting_key)
@@ -100,6 +100,6 @@ module WebexApi
       meeting = WebexApi::Meeting.new(meeting_key,self)
       meeting.list_attendees
     end
-   
+
   end
 end
