@@ -23,7 +23,7 @@ module WebexApi
 
         def get_meeting_body(xml, session_name, meeting_key, options)
             xml.accessControl{
-              xml.listing         'UNLISTED'
+              xml.listing         options[:listing_type]
               xml.sessionPassword options[:session_password]
             }
             xml.schedule{
@@ -34,6 +34,9 @@ module WebexApi
                 xml.sessionName session_name
                 xml.sessionType "9"
                 xml.description options[:description]
+            }
+            xml.extOptions{
+                xml.registration options[:registration]
             }
             xml.telephony{
               xml.telephonySupport 'CALLIN'
