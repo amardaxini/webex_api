@@ -2,6 +2,8 @@ require 'webex_api/webex_error'
 require 'webex_api/request'
 require 'webex_api/meeting_request'
 require 'webex_api/meeting'
+require 'webex_api/event_request'
+require 'webex_api/event'
 require 'webex_api/get_login_ticket'
 require 'webex_api/authenticate_user_request'
 
@@ -45,7 +47,12 @@ module WebexApi
       set_session_ticket
       meeting = WebexApi::Meeting.create_meeting(self, name, options)
     end
-
+    
+    def create_event(name, options={})
+      set_session_ticket
+      meeting = WebexApi::Event.create_event(self, name, options)
+    end
+    
     def set_meeting(name, meeting_key, options={})
       set_session_ticket
       meeting = WebexApi::Meeting.set_meeting(self, name, meeting_key, options)
