@@ -53,6 +53,11 @@ module WebexApi
       meeting = WebexApi::Event.create_event(self, name, options)
     end
 
+    def delete_event(name, options={})
+      set_session_ticket
+      meeting = WebexApi::Event.delete_event(self, name)
+    end
+
     def set_meeting(name, meeting_key, options={})
       set_session_ticket
       meeting = WebexApi::Meeting.set_meeting(self, name, meeting_key, options)
