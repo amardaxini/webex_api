@@ -21,7 +21,8 @@ module WebexApi
           get_meeting_body(xml, conf_name, nil, options)
         }
       end
-      puts body
+
+      # puts body # helpful for seeing XML request
       body
     end
 
@@ -147,7 +148,7 @@ module WebexApi
           xml.emailInvitations options[:email_invitation] || "FALSE"
         }
       end
-#       puts body
+      # puts body # helpful for seeing XML request
       perform_request(body)
     end
 
