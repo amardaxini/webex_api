@@ -38,7 +38,7 @@ module WebexApi
 
     def get_meeting_body(xml, conf_name, meeting_key, options)
       xml.enableOptions{
-        xml.chat options[:chat]
+        xml.chat options[:chat] || true
         xml.audioVideo true
         xml.poll true
         xml.voip true
