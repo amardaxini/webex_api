@@ -4,7 +4,7 @@ module WebexApi
     def initialize(client)
       super(client)
     end
-  
+
     def create_meeting(conf_name,options={})
       body = get_createmeeting_body(conf_name, options)
       perform_request(body)
@@ -38,7 +38,7 @@ module WebexApi
 
     def get_meeting_body(xml, conf_name, meeting_key, options)
       xml.enableOptions{
-        xml.chat true
+        xml.chat options[:chat]
         xml.audioVideo true
         xml.poll true
         xml.voip true
