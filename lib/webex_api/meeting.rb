@@ -26,7 +26,21 @@ module WebexApi
         }
       else
         return nil
-      end  
+      end
+    end
+
+    def self.get_recording_info(client, meeting_name)
+      meeting_request = WebexApi::MeetingRequest.new(client)
+      meeting_request.get_recording_info(meeting_name)
+
+      if meeting_request.xml_response.at_xpath('//total').text == "1"
+        return {
+          stream_url: meeting_request.xml_response.at_xpath('//streamURL').text,
+          file_url: meeting_request.xml_response.at_xpath('//fileURL').text
+        }
+      else
+        return nil
+      end
     end
 
     def self.set_meeting(client, name, meeting_key, options={})
@@ -45,7 +59,7 @@ module WebexApi
         }
       else
         return nil
-      end  
+      end
     end
 
     def get_meeting
@@ -60,7 +74,6 @@ module WebexApi
       meeting_request.success
     end
 
-    
     def get_host_url(email=nil)
       meeting_request = WebexApi::MeetingRequest.new(@client)
       meeting_request.get_host_meeting_url(@meeting_key)
@@ -108,14 +121,14 @@ module WebexApi
           else
             @meeting_attr[meth]  = nil
           end
-          
-        end  
+
+        end
 
         @meeting_attr[meth] ||= @xml.at_xpath("//*[contains(translate(name(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '#{meth.to_s.camelcase(:lower).downcase}')]")
       end
     end
 
 
-    
+
   end
 end
