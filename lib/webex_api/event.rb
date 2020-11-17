@@ -23,12 +23,13 @@ module WebexApi
                 }
             else
                 return nil
-            end  
+            end
         end
 
-        def self.delete_event(session_key)
-            event_request = WebexApi::EventRequest.new(@client)
-            event_request.delete_event(@session_key)
+        def self.delete_event(client,session_key)
+            event_request = WebexApi::EventRequest.new(client)
+            event_request.delete_event(session_key)
+            return {success: true}
         end
     end
 end

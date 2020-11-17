@@ -22,7 +22,8 @@ module WebexApi
           key: meeting_key,
           password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
           ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
-          ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text
+          ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text,
+          uuid: meeting_request.xml_response.at_xpath('//meetingUUID')&.text,
         }
       else
         return nil

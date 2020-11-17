@@ -13,7 +13,7 @@ module WebexApi
           xml.accessToken access_token
         }
       end
-      puts body
+#       puts body
       perform_request(body)
 
       if self.xml_response.at_xpath('//sessionTicket')
