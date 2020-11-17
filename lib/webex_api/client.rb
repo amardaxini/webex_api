@@ -63,6 +63,11 @@ module WebexApi
       meeting = WebexApi::Meeting.set_meeting(self, name, meeting_key, options)
     end
 
+    def get_recording(meeting_name)
+      set_session_ticket
+      recording = WebexApi::Meeting.get_recording_info(self, meeting_name)
+    end
+
     def get_meeting(meeting_key)
       set_session_ticket
       meeting = WebexApi::Meeting.new(meeting_key,self)

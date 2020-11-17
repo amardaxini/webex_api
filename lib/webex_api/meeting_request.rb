@@ -26,6 +26,21 @@ module WebexApi
       body
     end
 
+    def get_recording_info(meeting_name)
+      body = get_recording_info_body(meeting_name)
+      perform_request(body)
+    end
+
+    def get_recording_info_body(meeting_name)
+      body = webex_xml_request(@client.webex_email) do |xml|
+        xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.ep.LstRecording'){
+          xml.recordName meeting_name
+        }
+      end
+      puts body
+      body
+    end
+
     def get_setmeeting_body(conf_name, meeting_key, options={})
       body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.SetMeeting'){
@@ -42,6 +57,7 @@ module WebexApi
         xml.audioVideo true
         xml.poll true
         xml.voip true
+        xml.autoRecord true if options[:auto_record]
         xml.HQvideo true if options[:hd_video]
         xml.HDvideo true if options[:hd_video]
         xml.autoDeleteAfterMeetingEnd false if options[:dont_auto_delete]
