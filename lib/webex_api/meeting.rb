@@ -36,7 +36,7 @@ module WebexApi
 
       if meeting_request.xml_response.at_xpath('//total').text == "1"
         return {
-          password: meeting_request.xml_response.at_xpath('//password')&.text
+          password: meeting_request.xml_response.at_xpath('//password')&.text,
           stream_url: meeting_request.xml_response.at_xpath('//streamURL')&.text,
           file_url: meeting_request.xml_response.at_xpath('//fileURL')&.text
         }
