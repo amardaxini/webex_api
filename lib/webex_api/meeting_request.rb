@@ -35,6 +35,9 @@ module WebexApi
       body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.ep.LstRecording'){
           xml.recordName meeting_name
+          xml.serviceTypes{
+            xml.serviceType 'MeetingCenter'
+          }
         }
       end
       puts body
