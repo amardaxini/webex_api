@@ -34,11 +34,23 @@ module WebexApi
       meeting_request = WebexApi::MeetingRequest.new(client)
       meeting_request.get_recording_info(meeting_name)
 
-      if meeting_request.xml_response.at_xpath('//total').text == "1"
+      if meeting_request.xml_response.at_xpath('//total').text.to_i >= 1
+        stream_urls = meeting_request.xml_response.xpath("//streamURL").map do |url|
+          url.text
+        end
+
+        file_urls = meeting_request.xml_response.xpath("//fileURL").map do |url|
+          url.text
+        end
+
+        passwords = meeting_request.xml_response.xpath("//password").map do |password|
+          password.text
+        end
+
         return {
-          password: meeting_request.xml_response.at_xpath('//password')&.text,
-          stream_url: meeting_request.xml_response.at_xpath('//streamURL')&.text,
-          file_url: meeting_request.xml_response.at_xpath('//fileURL')&.text
+          passwords: passwords,
+          stream_urls: stream_urls,
+          file_urls: file_urls
         }
       else
         return nil
