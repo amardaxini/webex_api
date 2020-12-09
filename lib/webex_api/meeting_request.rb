@@ -17,12 +17,15 @@ module WebexApi
 
     def get_createmeeting_body(conf_name, options={})
       body = webex_xml_request(@client.webex_email) do |xml|
-        xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
-          get_meeting_body(xml, conf_name, nil, options)
-        }
+        100.times do |index|
+          xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
+            get_meeting_body(xml, "#{conf_name} #{index}", nil, options)
+          }
+        end
       end
 
       # puts body # helpful for seeing XML request
+      puts body
       body
     end
 
@@ -106,11 +109,13 @@ module WebexApi
       end
     end
 
-    def get_meeting(meeting_key)
+    def get_meeting(meeting_keys)
       body = webex_xml_request(@client.webex_email) do |xml|
-        xml.bodyContent('xsi:type' => 'java:com.webex.service.binding.meeting.GetMeeting'){
-          xml.meetingKey meeting_key
-        }
+        meeting_keys.each do |meeting_key|
+          xml.bodyContent('xsi:type' => 'java:com.webex.service.binding.meeting.GetMeeting'){
+            xml.meetingKey meeting_key
+          }
+        end
       end
       begin
         perform_request(body)

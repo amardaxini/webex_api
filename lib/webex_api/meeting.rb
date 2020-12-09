@@ -17,16 +17,29 @@ module WebexApi
         meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
       end
 
-      if meeting_key
-        return {
-          key: meeting_key,
-          password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
-          ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
-          ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text,
-          uuid: meeting_request.xml_response.at_xpath('//meetingUUID')&.text,
-        }
-      else
-        return nil
+      keys = meeting_request.xml_response.xpath("//meetingkey").map do |response|
+        response.text
+      end
+
+      meeting_info = WebexApi::MeetingRequest.new(client)
+      meeting_info.get_meeting(keys)
+      @xml = meeting_info.xml_response
+
+      binding.pry
+
+      results = meeting_request.xml_response.xpath("//bodyContent").map do |meeting|
+        meeting_key = meeting.xpath("//meetingkey")
+        if meeting_key
+          return {
+            key: meeting_key,
+            password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
+            ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
+            ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text,
+            uuid: meeting_request.xml_response.at_xpath('//meetingUUID')&.text,
+          }
+        else
+          return nil
+        end
       end
     end
 
@@ -34,6 +47,7 @@ module WebexApi
       meeting_request = WebexApi::MeetingRequest.new(client)
       meeting_request.get_recording_info(meeting_name)
 
+      puts meeting_request.xml_response
       if meeting_request.xml_response.at_xpath('//total').text.to_i >= 1
         stream_urls = meeting_request.xml_response.xpath("//streamURL").map do |url|
           url.text
