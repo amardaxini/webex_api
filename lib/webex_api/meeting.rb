@@ -21,23 +21,23 @@ module WebexApi
       meeting_info.get_meeting(keys)
       @xml = meeting_info.xml_response
 
-      binding.pry
-
-      results = meeting_request.xml_response.xpath("//bodyContent").map do |meeting|
+      results = meeting_request.xml_response.xpath("//bodyContent").map do |meeting, index|
         meeting_key = meeting.xpath("//meetingkey")
         if meeting_key
           return {
             key: meeting_key,
-            password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
-            ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
-            ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text,
-            uuid: meeting_request.xml_response.at_xpath('//meetingUUID')&.text,
+            password: meeting.at_xpath('//meetingPassword')&.text,
+            ical_host_url: @xml.xpath('//host')[index]&.text,
+            ical_attendee_url: @xml.xpath('//attendee')[index]&.text,
+            uuid: meeting.xpath('//meetingUUID')&.text,
           }
         else
           return nil
         end
       end
 
+      binding.pry
+      return results
     end
 
     def self.create_meeting(client,name,options={})
