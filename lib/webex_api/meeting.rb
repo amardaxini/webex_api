@@ -9,13 +9,9 @@ module WebexApi
       @client = client
     end
 
-    def self.create_meeting(client,name,options={})
-      meeting_key = nil
-      meeting_request = WebexApi::MeetingRequest.new(client)
-      meeting_request.create_meeting(name,options)
-      if meeting_request.xml_response.at_xpath('//meetingkey')
-        meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
-      end
+    def self.create_meetings(client,names,meeting_options={})
+      meetings_request = WebexApi::MeetingRequest.new(client)
+      meetings_request.create_meetings(names,options)
 
       if meeting_key
         return {
