@@ -32,8 +32,8 @@ module WebexApi
       end.to_xml
     end
 
-    
-    def perform_request(body)
+
+    def perform_request(body, multiple: false)
       uri = URI.parse("https://#{@client.site_name}.webex.com")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
@@ -43,7 +43,13 @@ module WebexApi
 
       if xml_data.at_xpath('/message/header/response/result') && xml_data.at_xpath('/message/header/response/result').text == 'SUCCESS'
         @success = true
-        @xml_response = xml_data.at_xpath('/message/body/bodyContent')
+
+        if multiple
+          @xml_response = xml_data.xpath('//bodyContent')
+        else
+          @xml_response = xml_data.at_xpath('/message/body/bodyContent')
+        end
+
       else
         @error = xml_data.at_xpath('/message/header/response/reason').text rescue "error"
         raise WebexApi::WebexError.new(@error)

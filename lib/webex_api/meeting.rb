@@ -9,13 +9,9 @@ module WebexApi
       @client = client
     end
 
-    def self.create_meeting(client,name,options={})
-      meeting_key = nil
-      meeting_request = WebexApi::MeetingRequest.new(client)
-      meeting_request.create_meeting(name,options)
-      if meeting_request.xml_response.at_xpath('//meetingkey')
-        meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
-      end
+    def self.create_meetings(client,names,meeting_options={})
+      meetings_request = WebexApi::MeetingRequest.new(client)
+      meetings_request.create_meetings(names,options)
 
       if meeting_key
         return {
@@ -30,10 +26,50 @@ module WebexApi
       end
     end
 
+    def self.create_meetings(client, meetings)
+      meeting_request = WebexApi::MeetingRequest.new(client)
+      meeting_request.create_meetings(meetings)
+
+      create_meetings_response = {}
+
+      meeting_request.xml_response.xpath("//bodyContent").each do |meeting|
+        meeting_key = meeting.at("meetingkey")&.text
+
+        create_meetings_response[meeting_key] = {
+          key: meeting_key,
+          password: meeting.at('meetingPassword')&.text,
+          ical_host_url: meeting.at('host')&.text,
+          ical_attendee_url: meeting.at('attendee')&.text,
+          uuid: meeting.at('meetingUUID')&.text,
+        }
+      end
+
+      meeting_keys = create_meetings_response.keys
+      meetings_info = WebexApi::MeetingRequest.new(client)
+      meetings_info.get_meetings(meeting_keys)
+      meetings_info_response = meetings_info.xml_response
+
+      result = {}
+      meetings_info_response.xpath("//bodyContent").each do |meeting|
+        meeting_key  = meeting.at("meetingkey")&.text
+        meeting_name = meeting.at("confName")&.text
+
+        result[meeting_name]                  = create_meetings_response[meeting_key]
+        result[meeting_name][:title]          = meeting_name
+        result[meeting_name][:host_key]       = meeting.at("hostKey")&.text
+        result[meeting_name][:web_link]       = meeting.at("meetingLink")&.text
+        result[meeting_name][:sip_address]    = meeting.at("sipURL")&.text
+        result[meeting_name][:call_in_number] = meeting.at("tollNum")&.text
+      end
+
+      result
+    end
+
     def self.get_recording_info(client, meeting_name)
       meeting_request = WebexApi::MeetingRequest.new(client)
       meeting_request.get_recording_info(meeting_name)
 
+      puts meeting_request.xml_response
       if meeting_request.xml_response.at_xpath('//total').text.to_i >= 1
         stream_urls = meeting_request.xml_response.xpath("//streamURL").map do |url|
           url.text
