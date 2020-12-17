@@ -17,30 +17,56 @@ module WebexApi
         meeting_key = meeting_request.xml_response.at_xpath('//meetingkey').text
       end
 
-      keys = meeting_request.xml_response.xpath("//meetingkey").map do |response|
-        response.text
+      if meeting_key
+        return {
+          key: meeting_key,
+          password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
+          ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
+          ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text,
+          uuid: meeting_request.xml_response.at_xpath('//meetingUUID')&.text,
+        }
+      else
+        return nil
+      end
+    end
+
+    def self.create_meetings(client, meetings)
+      meeting_request = WebexApi::MeetingRequest.new(client)
+      meeting_request.create_meetings(meetings)
+
+      create_meetings_response = {}
+
+      meeting_request.xml_response.xpath("//bodyContent").each do |meeting|
+        meeting_key = meeting.at("meetingkey")&.text
+
+        create_meetings_response[meeting_key] = {
+          key: meeting_key,
+          password: meeting.at('meetingPassword')&.text,
+          ical_host_url: meeting.at('host')&.text,
+          ical_attendee_url: meeting.at('attendee')&.text,
+          uuid: meeting.at('meetingUUID')&.text,
+        }
       end
 
-      meeting_info = WebexApi::MeetingRequest.new(client)
-      meeting_info.get_meeting(keys)
-      @xml = meeting_info.xml_response
+      meeting_keys = create_meetings_response.keys
+      meetings_info = WebexApi::MeetingRequest.new(client)
+      meetings_info.get_meetings(meeting_keys)
+      meetings_info_response = meetings_info.xml_response
 
-      binding.pry
+      result = {}
+      meetings_info_response.xpath("//bodyContent").each do |meeting|
+        meeting_key  = meeting.at("meetingkey")&.text
+        meeting_name = meeting.at("confName")&.text
 
-      results = meeting_request.xml_response.xpath("//bodyContent").map do |meeting|
-        meeting_key = meeting.xpath("//meetingkey")
-        if meeting_key
-          return {
-            key: meeting_key,
-            password: meeting_request.xml_response.at_xpath('//meetingPassword')&.text,
-            ical_host_url: meeting_request.xml_response.at_xpath('//host')&.text,
-            ical_attendee_url: meeting_request.xml_response.at_xpath('//attendee')&.text,
-            uuid: meeting_request.xml_response.at_xpath('//meetingUUID')&.text,
-          }
-        else
-          return nil
-        end
+        result[meeting_name]                  = create_meetings_response[meeting_key]
+        result[meeting_name][:title]          = meeting_name
+        result[meeting_name][:host_key]       = meeting.at("hostKey")&.text
+        result[meeting_name][:web_link]       = meeting.at("meetingLink")&.text
+        result[meeting_name][:sip_address]    = meeting.at("sipURL")&.text
+        result[meeting_name][:call_in_number] = meeting.at("tollNum")&.text
       end
+
+      result
     end
 
     def self.get_recording_info(client, meeting_name)

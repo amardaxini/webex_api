@@ -10,6 +10,11 @@ module WebexApi
       perform_request(body)
     end
 
+    def create_meetings(meetings)
+      body = get_createmeetings_body(meetings)
+      perform_request(body, multiple: true)
+    end
+
     def set_meeting(conf_name, meeting_key, options={})
       body = get_setmeeting_body(conf_name, meeting_key, options)
       perform_request(body)
@@ -17,15 +22,25 @@ module WebexApi
 
     def get_createmeeting_body(conf_name, options={})
       body = webex_xml_request(@client.webex_email) do |xml|
-        100.times do |index|
+        xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
+          get_meeting_body(xml, conf_name, nil, options)
+        }
+      end
+
+      # puts body # helpful for seeing XML request
+      body
+    end
+
+    def get_createmeetings_body(meetings)
+      body = webex_xml_request(@client.webex_email) do |xml|
+        meetings.each do |meeting|
           xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.meeting.CreateMeeting'){
-            get_meeting_body(xml, "#{conf_name} #{index}", nil, options)
+            get_meeting_body(xml, meeting[:name], nil, meeting[:options])
           }
         end
       end
 
       # puts body # helpful for seeing XML request
-      puts body
       body
     end
 
@@ -109,7 +124,20 @@ module WebexApi
       end
     end
 
-    def get_meeting(meeting_keys)
+    def get_meeting(meeting_key)
+      body = webex_xml_request(@client.webex_email) do |xml|
+        xml.bodyContent('xsi:type' => 'java:com.webex.service.binding.meeting.GetMeeting'){
+          xml.meetingKey meeting_key
+        }
+      end
+      begin
+        perform_request(body)
+      rescue Exception => e
+        p e
+      end
+    end
+
+    def get_meetings(meeting_keys)
       body = webex_xml_request(@client.webex_email) do |xml|
         meeting_keys.each do |meeting_key|
           xml.bodyContent('xsi:type' => 'java:com.webex.service.binding.meeting.GetMeeting'){
@@ -118,7 +146,7 @@ module WebexApi
         end
       end
       begin
-        perform_request(body)
+        perform_request(body, multiple: true)
       rescue Exception => e
         p e
       end
