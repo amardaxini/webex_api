@@ -9,7 +9,7 @@ module WebexApi
       @client = client
     end
 
-    def self.create_meeting(client,names,meeting_options={})
+    def self.create_meeting(client,names,options={})
       meetings_request = WebexApi::MeetingRequest.new(client)
       meetings_request.create_meeting(names,options)
 
