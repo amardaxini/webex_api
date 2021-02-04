@@ -98,6 +98,7 @@ module WebexApi
         if options[:scheduled_date]
           xml.startDate options[:scheduled_date].strftime("%m/%d/%Y %T") rescue nil
           xml.timeZoneID options[:time_zone_id].to_i unless options[:time_zone_id].nil?
+          xml.timeZone options[:time_zone] unless options[:time_zone].nil?
         else
           options[:scheduled_date].to_s + "1"
           xml.startDate
