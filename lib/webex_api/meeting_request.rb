@@ -86,6 +86,10 @@ module WebexApi
       xml.metaData{
         xml.confName conf_name
       }
+      xml.attendeeOptions{
+        xml.autoLock true if options[:auto_lock]
+        xml.autoLockWaitTime options[:auto_lock_wait_time]
+      }
       if options[:meeting_password] != nil && options[:meeting_password].strip != ''
         xml.accessControl{
           xml.meetingPassword options[:meeting_password]
