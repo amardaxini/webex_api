@@ -87,8 +87,9 @@ module WebexApi
         xml.confName conf_name
       }
       xml.attendeeOptions{
+        xml.externalAttendeeSecurity options[:external_attendee_security] if options[:external_attendee_security].present?
         xml.autoLock true if options[:auto_lock]
-        xml.autoLockWaitTime options[:auto_lock_wait_time]
+        xml.autoLockWaitTime options[:auto_lock_wait_time] if options[:auto_lock_wait_time].present?
       }
       if options[:meeting_password] != nil && options[:meeting_password].strip != ''
         xml.accessControl{
@@ -110,7 +111,7 @@ module WebexApi
         xml.duration(options[:duration].to_i)
       }
       xml.telephony{
-        xml.telephonySupport 'CALLIN'
+        xml.telephonySupport options[:telephony_mode] || 'CALLIN'
       }
       xml.meetingkey meeting_key unless meeting_key.nil?
       if options[:emails]

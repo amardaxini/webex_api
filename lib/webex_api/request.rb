@@ -34,11 +34,19 @@ module WebexApi
 
 
     def perform_request(body, multiple: false)
+      if @client.debug
+        puts "Sending Webex XML Request: #{body}"
+      end
+      
       uri = URI.parse("https://#{@client.site_name}.webex.com")
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
+      http.use_ssl = true      
       response = http.post('/WBXService/XMLService', body)
-      # puts response # helpful for seeing XML response
+
+      if @client.debug
+        puts "Webex XML Response: #{response}" # helpful for seeing XML response
+      end
+
       xml_data = Nokogiri::XML(response.body).remove_namespaces!
 
       if xml_data.at_xpath('/message/header/response/result') && xml_data.at_xpath('/message/header/response/result').text == 'SUCCESS'

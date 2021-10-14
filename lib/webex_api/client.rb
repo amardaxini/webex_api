@@ -17,11 +17,13 @@ module WebexApi
                   :webex_email,
                   :site_name,
                   :access_token,
-                  :session_ticket
+                  :session_ticket,
+                  :debug
 
-    def initialize(webex_id, webex_email, site_name, site_id=nil, partner_id=nil)
+    def initialize(webex_id, webex_email, site_name, site_id=nil, partner_id=nil, debug=false)
       @webex_id = webex_id
       @site_name = site_name
+      @debug = debug
     end
 
     def with_access_token(access_token)
