@@ -58,7 +58,7 @@ module WebexApi
           }
         }
       end
-      puts body
+      # puts body
       body
     end
 
@@ -68,7 +68,7 @@ module WebexApi
           get_meeting_body(xml, conf_name, meeting_key, options)
         }
       end
-      puts body
+      # puts body
       body
     end
 
@@ -136,11 +136,7 @@ module WebexApi
           xml.meetingKey meeting_key
         }
       end
-      begin
-        perform_request(body)
-      rescue Exception => e
-        p e
-      end
+      perform_request(body)
     end
 
     def get_meetings(meeting_keys)
@@ -151,11 +147,7 @@ module WebexApi
           }
         end
       end
-      begin
-        perform_request(body, multiple: true)
-      rescue Exception => e
-        p e
-      end
+      perform_request(body, multiple: true)
     end
 
     def get_host_meeting_url(meeting_key)
@@ -183,11 +175,10 @@ module WebexApi
         }
       end
       perform_request(body)
-
     end
 
     def add_attendee(meeting_key,email,options={})
-       body = webex_xml_request(@client.webex_email) do |xml|
+      body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.attendee.CreateMeetingAttendee'){
           xml.person{
             if options[:name]
@@ -211,7 +202,7 @@ module WebexApi
     end
 
     def delete_attendee(meeting_key,email)
-       body = webex_xml_request(@client.webex_email) do |xml|
+      body = webex_xml_request(@client.webex_email) do |xml|
         xml.bodyContent('xsi:type' =>'java:com.webex.service.binding.attendee.DelMeetingAttendee'){
           xml.attendeeEmail {
             xml.email email
