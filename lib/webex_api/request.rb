@@ -45,6 +45,7 @@ module WebexApi
 
       if @client.debug
         puts "Webex XML Response: #{response}" # helpful for seeing XML response
+        puts "Webex XML Response Body: #{response.body}"
       end
 
       xml_data = Nokogiri::XML(response.body).remove_namespaces!
