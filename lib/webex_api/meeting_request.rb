@@ -158,6 +158,9 @@ module WebexApi
           xml.sessionKey meeting_key
         }
       end
+
+      puts body # helpful for seeing XML request
+
       perform_request(body)
     end
 
