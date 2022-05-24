@@ -37,10 +37,10 @@ module WebexApi
       if @client.debug
         puts "Sending Webex XML Request: #{body}"
       end
-      
+
       uri = URI.parse("https://#{@client.site_name}.webex.com")
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true      
+      http.use_ssl = true
       response = http.post('/WBXService/XMLService', body)
 
       if @client.debug
@@ -60,8 +60,23 @@ module WebexApi
         end
 
       else
-        @error = xml_data.at_xpath('/message/header/response/reason').text rescue "error"
-        raise WebexApi::WebexError.new(@error)
+        @error = OpenStruct.new
+        @error.result = xml_data.at_xpath('/message/header/response/result').text rescue nil
+        @error.reason = xml_data.at_xpath('/message/header/response/reason').text rescue "error"
+        @error.gsbStatus = xml_data.at_xpath('/message/header/response/gsbStatus').text rescue nil
+        @error.exceptionID = xml_data.at_xpath('/message/header/response/exceptionID').text rescue nil
+
+        sub_errors_in_response = xml_data.at_xpath('/message/header/response/subErrors').children
+
+        if sub_errors_in_response.any? {|c| c.name == 'subError'}
+          @error.sub_errors = sub_errors_in_response.map do |sub_error|
+            sub_error.children.map.with_object({}) do |sub_error_field, o|
+              o[sub_error_field.name] = sub_error_field.text
+            end
+          end
+        end
+
+        raise WebexApi::WebexError.new(@error.to_h.to_json)
       end
     end
 
