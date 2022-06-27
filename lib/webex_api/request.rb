@@ -66,9 +66,9 @@ module WebexApi
         @error.gsbStatus = xml_data.at_xpath('/message/header/response/gsbStatus').text rescue nil
         @error.exceptionID = xml_data.at_xpath('/message/header/response/exceptionID').text rescue nil
 
-        sub_errors_in_response = xml_data.at_xpath('/message/header/response/subErrors').children
+        sub_errors_in_response = xml_data.at_xpath('/message/header/response/subErrors')&.children
 
-        if sub_errors_in_response.any? {|c| c.name == 'subError'}
+        if sub_errors_in_response&.any? {|c| c.name == 'subError'}
           @error.sub_errors = sub_errors_in_response.map do |sub_error|
             sub_error.children.map.with_object({}) do |sub_error_field, o|
               o[sub_error_field.name] = sub_error_field.text
