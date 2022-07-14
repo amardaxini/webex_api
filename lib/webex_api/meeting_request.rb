@@ -111,6 +111,9 @@ module WebexApi
           xml.startDate
         end
         xml.duration(options[:duration].to_i)
+        if options[:open_time]
+          xml.openTime options[:open_time].to_i
+        end
       }
       xml.telephony{
         xml.telephonySupport options[:telephony_mode] || 'CALLIN'
