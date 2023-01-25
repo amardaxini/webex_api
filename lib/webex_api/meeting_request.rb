@@ -131,21 +131,21 @@ module WebexApi
         }
       end
 
-      xml.repeat{
+      xml.repeat {
         xml.repeatType options[:repeat_type] if options[:repeat_type].present?
         xml.interval options[:interval].to_i if options[:interval].present?
         xml.afterMeetingNumber options[:after_meeting_number] if options[:after_meeting_number].present?
         xml.dayInWeek {
-          options[:day_in_week].each{ |day| xml.day day } if options[:day_in_week].present?
-        }
+          options[:day_in_week].each{ |day| xml.day day }
+        } if options[:day_in_week].present?
         xml.expirationDate options[:expiration_date]&.strftime("%m/%d/%Y %T") if options[:expiration_date].present?
-        xml.dayInMonth = options[:day_in_month] if options[:day_in_month]
-        xml.weekInMonth = options[:week_in_month] if options[:week_in_month]
-        xml.monthInYear = options[:month_in_year] if options[:month_in_year]
-        xml.dayInYear = options[:day_in_year] if options[:day_in_year]
-        xml.isException = options[:is_exception] if options[:is_exception]
-        xml.seriesMeetingKey = options[:series_meeting_key] if options[:series_meeting_key]
-        xml.hasException = options[:has_exception] if options[:has_exception]
+        xml.dayInMonth options[:day_in_month] if options[:day_in_month].present?
+        xml.weekInMonth options[:week_in_month] if options[:week_in_month].present?
+        xml.monthInYear options[:month_in_year] if options[:month_in_year].present?
+        xml.dayInYear options[:day_in_year] if options[:day_in_year].present?
+        xml.isException options[:is_exception] if options[:is_exception].present?
+        xml.seriesMeetingKey options[:series_meeting_key] if options[:series_meeting_key].present?
+        xml.hasException options[:has_exception] if options[:has_exception].present?
       }
 
     end
