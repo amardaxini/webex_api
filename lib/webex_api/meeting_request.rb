@@ -8,7 +8,7 @@ module WebexApi
     def create_meeting(conf_name,options={})
       body = get_createmeeting_body(conf_name, options)
 
-      puts body
+      # puts body
       perform_request(body)
     end
 
@@ -29,7 +29,7 @@ module WebexApi
         }
       end
 
-      puts body # helpful for seeing XML request
+      # puts body # helpful for seeing XML request
       body
     end
 
@@ -42,7 +42,7 @@ module WebexApi
         end
       end
 
-      puts body # helpful for seeing XML request
+      # puts body # helpful for seeing XML request
       body
     end
 
@@ -60,7 +60,7 @@ module WebexApi
           }
         }
       end
-      puts body
+      # puts body
       body
     end
 
@@ -70,7 +70,7 @@ module WebexApi
           get_meeting_body(xml, conf_name, meeting_key, options)
         }
       end
-      puts body
+      # puts body
       body
     end
 
@@ -181,7 +181,7 @@ module WebexApi
         }
       end
 
-      puts body # helpful for seeing XML request
+      # puts body # helpful for seeing XML request
 
       perform_request(body)
     end
@@ -224,7 +224,7 @@ module WebexApi
           xml.emailInvitations options[:email_invitation] || "FALSE"
         }
       end
-      puts body # helpful for seeing XML request
+      # puts body # helpful for seeing XML request
       perform_request(body)
     end
 
